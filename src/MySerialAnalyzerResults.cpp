@@ -4,19 +4,16 @@
 #include "MySerialAnalyzerSettings.h"
 #include <iostream>
 #include <sstream>
-#include <stdio.h>
 
 MySerialAnalyzerResults::MySerialAnalyzerResults( MySerialAnalyzer* analyzer, MySerialAnalyzerSettings* settings )
     : AnalyzerResults(), mSettings( settings ), mAnalyzer( analyzer )
 {
 }
 
-MySerialAnalyzerResults::~MySerialAnalyzerResults()
-{
-}
+MySerialAnalyzerResults::~MySerialAnalyzerResults() = default;
 
 void MySerialAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& /*channel*/,
-                                                DisplayBase display_base ) // unrefereced vars commented out to remove warnings.
+                                                DisplayBase display_base ) // unreferenced vars commented out to remove warnings.
 {
     // we only need to pay attention to 'channel' if we're making bubbles for more than one channel (as set by
     // AddChannelBubblesWillAppearOn)
@@ -41,11 +38,8 @@ void MySerialAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& /*ch
     char result_str[ 128 ];
 
     // MP mode address case:
-    bool mp_mode_address_flag = false;
     if( ( frame.mFlags & MP_MODE_ADDRESS_FLAG ) != 0 )
     {
-        mp_mode_address_flag = true;
-
         AddResultString( "A" );
         AddResultString( "Addr" );
 
@@ -76,9 +70,9 @@ void MySerialAnalyzerResults::GenerateBubbleText( U64 frame_index, Channel& /*ch
         snprintf( result_str, sizeof( result_str ), "%s (error)", number_str );
         AddResultString( result_str );
 
-        if( parity_error == true && framing_error == false )
+        if( framing_error == false )
             snprintf( result_str, sizeof( result_str ), "%s (parity error)", number_str );
-        else if( parity_error == false && framing_error == true )
+        else if( parity_error == false )
             snprintf( result_str, sizeof( result_str ), "%s (framing error)", number_str );
         else
             snprintf( result_str, sizeof( result_str ), "%s (framing error & parity error)", number_str );
@@ -132,7 +126,7 @@ void MySerialAnalyzerResults::GenerateExportFile( const char* file, DisplayBase 
 
             ss << std::endl;
 
-            AnalyzerHelpers::AppendToFile( ( U8* )ss.str().c_str(), ss.str().length(), f );
+            AnalyzerHelpers::AppendToFile( ( U8* )ss.str().c_str(), static_cast<U32>( ss.str().length() ), f );
             ss.str( std::string() );
 
             if( UpdateExportProgressAndCheckForCancel( i, num_frames ) == true )
@@ -182,7 +176,7 @@ void MySerialAnalyzerResults::GenerateExportFile( const char* file, DisplayBase 
 
             ss << std::endl;
 
-            AnalyzerHelpers::AppendToFile( ( U8* )ss.str().c_str(), ss.str().length(), f );
+            AnalyzerHelpers::AppendToFile( ( U8* )ss.str().c_str(), static_cast<U32>( ss.str().length() ), f );
             ss.str( std::string() );
 
 
@@ -221,11 +215,8 @@ void MySerialAnalyzerResults::GenerateFrameTabularText( U64 frame_index, Display
     char result_str[ 128 ];
 
     // MP mode address case:
-    bool mp_mode_address_flag = false;
     if( ( frame.mFlags & MP_MODE_ADDRESS_FLAG ) != 0 )
     {
-        mp_mode_address_flag = true;
-
         if( framing_error == false )
         {
             snprintf( result_str, sizeof( result_str ), "Address: %s", number_str );
@@ -242,9 +233,9 @@ void MySerialAnalyzerResults::GenerateFrameTabularText( U64 frame_index, Display
     // normal case:
     if( ( parity_error == true ) || ( framing_error == true ) )
     {
-        if( parity_error == true && framing_error == false )
+        if( framing_error == false )
             snprintf( result_str, sizeof( result_str ), "%s (parity error)", number_str );
-        else if( parity_error == false && framing_error == true )
+        else if( parity_error == false )
             snprintf( result_str, sizeof( result_str ), "%s (framing error)", number_str );
         else
             snprintf( result_str, sizeof( result_str ), "%s (framing error & parity error)", number_str );
@@ -258,14 +249,14 @@ void MySerialAnalyzerResults::GenerateFrameTabularText( U64 frame_index, Display
 }
 
 void MySerialAnalyzerResults::GeneratePacketTabularText( U64 /*packet_id*/,
-                                                       DisplayBase /*display_base*/ ) // unrefereced vars commented out to remove warnings.
+                                                       DisplayBase /*display_base*/ ) // unreferenced vars commented out to remove warnings.
 {
     ClearResultStrings();
     AddResultString( "not supported" );
 }
 
 void MySerialAnalyzerResults::GenerateTransactionTabularText(
-    U64 /*transaction_id*/, DisplayBase /*display_base*/ ) // unrefereced vars commented out to remove warnings.
+    U64 /*transaction_id*/, DisplayBase /*display_base*/ ) // unreferenced vars commented out to remove warnings.
 {
     ClearResultStrings();
     AddResultString( "not supported" );

@@ -26,7 +26,7 @@ MySerialAnalyzerSettings::MySerialAnalyzerSettings()
     mBitRateInterface->SetTitleAndTooltip( "Bit Rate (Bits/s)", "Specify the bit rate in bits per second." );
     mBitRateInterface->SetMax( 100000000 );
     mBitRateInterface->SetMin( 1 );
-    mBitRateInterface->SetInteger( mBitRate );
+    mBitRateInterface->SetInteger( static_cast<int>( mBitRate ) );
 
     mBitRateChangeInterface.reset(new AnalyzerSettingInterfaceText() );
     mBitRateChangeInterface->SetTitleAndTooltip( "Bitrate changes", "Timestamp:Bitrate, separated by spaces." );
@@ -125,9 +125,7 @@ MySerialAnalyzerSettings::MySerialAnalyzerSettings()
     AddChannel( mInputChannel, "Serial", false );
 }
 
-MySerialAnalyzerSettings::~MySerialAnalyzerSettings()
-{
-}
+MySerialAnalyzerSettings::~MySerialAnalyzerSettings() = default;
 
 /*
  * Fills mBRChange map according to mBitRateChange string contents
@@ -139,11 +137,11 @@ void MySerialAnalyzerSettings::SyncBitRateChange()
     mBRChange.clear() ;
 
     if (mBitRateChangeStr.empty()) return ;
-   
+
     std::string s=mBitRateChangeStr;
     std::string delimiter = " " ;
     std::vector<std::string> token;
-    
+
     size_t pos = 0 ;
 
     float time ;
@@ -154,7 +152,7 @@ void MySerialAnalyzerSettings::SyncBitRateChange()
         std::string t=s.substr(0,pos);
         // std::cout << "token:{" << t << "}" << std::endl ;
         s.erase(0,pos+delimiter.length());
-        
+
         if (t.empty()) { // multiple spaces
             continue ;
         }
@@ -174,7 +172,7 @@ void MySerialAnalyzerSettings::SyncBitRateChange()
             //TODO: display error to user.
             continue;
         }
-        
+
         mBRChange[time] = bitrate ;
     }
 
@@ -212,7 +210,7 @@ bool MySerialAnalyzerSettings::SetSettingsFromInterfaces()
 void MySerialAnalyzerSettings::UpdateInterfacesFromSettings()
 {
     mInputChannelInterface->SetChannel( mInputChannel );
-    mBitRateInterface->SetInteger( mBitRate );
+    mBitRateInterface->SetInteger( static_cast<int>( mBitRate ) );
     mBitRateChangeInterface->SetText( mBitRateChangeStr.c_str()) ;
     mBitsPerTransferInterface->SetNumber( mBitsPerTransfer );
     mStopBitsInterface->SetNumber( mStopBits );
@@ -241,8 +239,8 @@ void MySerialAnalyzerSettings::LoadSettings( const char* settings )
     text_archive >> *( U32* )&mShiftOrder;
     text_archive >> mInverted;
 
-    // check to make sure loading it actual works befor assigning the result -- do this when adding settings to an anylzer which has been
-    // previously released.
+    // check to make sure loading it actually works before assigning the result
+    // do this when adding settings to an analyzer which has been previously released.
     bool use_autobaud;
     if( text_archive >> use_autobaud )
         mUseAutobaud = use_autobaud;

@@ -29,12 +29,12 @@ class MySerialAnalyzer : public Analyzer2
     void ComputeSampleOffsets();
 
   protected: // vars
-    std::auto_ptr<MySerialAnalyzerSettings> mSettings;
-    std::auto_ptr<MySerialAnalyzerResults> mResults;
+    std::unique_ptr<MySerialAnalyzerSettings> mSettings;
+    std::unique_ptr<MySerialAnalyzerResults> mResults;
     AnalyzerChannelData* mSerial;
 
     MySerialSimulationDataGenerator mSimulationDataGenerator;
-    bool mSimulationInitilized;
+    bool mSimulationInitialized;
 
     // Serial analysis vars:
     U32 mSampleRateHz;

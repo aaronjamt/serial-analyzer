@@ -12,7 +12,7 @@ class MySerialSimulationDataGenerator
     ~MySerialSimulationDataGenerator();
 
     void Initialize( U32 simulation_sample_rate, MySerialAnalyzerSettings* settings );
-    U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channelss );
+    U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
 
   protected:
     MySerialAnalyzerSettings* mSettings;
@@ -30,4 +30,4 @@ class MySerialSimulationDataGenerator
     ClockGenerator mClockGenerator;
     SimulationChannelDescriptor mSerialSimulationData; // if we had more than one channel to simulate, they would need to be in an array
 };
-#endif // UNIO_SIMULATION_DATA_GENERATOR
+#endif // SERIAL_SIMULATION_DATA_GENERATOR
